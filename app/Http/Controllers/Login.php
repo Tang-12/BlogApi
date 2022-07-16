@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AdminRequest;
 use App\Models\Admin;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class Login extends Controller
 {
@@ -55,7 +55,8 @@ class Login extends Controller
             if(!Hash::check($password, $info['password'])) {
                 return $this->_error('密码错误');
             }
-            return $this->_success('成功');
+            $token = JWTAuth::fromUser($info);
+            return $this->_success('成功', $token);
         }catch(\Exception $e){
             return $this->_error($e->getMessage()); // 错误信息 $e->getMessage
         }

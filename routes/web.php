@@ -19,4 +19,5 @@ Route::get('/', function () {
 });
 Route::prefix('adminApi/v1')->group(function(){
     Route::post('register', [Login::class, 'register']);
+    Route::post('login', [Login::class, 'login']);
 });
