@@ -55,7 +55,11 @@ class Login extends Controller
             if(!Hash::check($password, $info['password'])) {
                 return $this->_error('密码错误');
             }
-            $token = JWTAuth::fromUser($info);
+            $data = [
+                'id' => $info['id'],
+                'name' => $info['name'],
+            ];
+            $token = JWTAuth::fromUser($data);
             return $this->_success('成功', $token);
         }catch(\Exception $e){
             return $this->_error($e->getMessage()); // 错误信息 $e->getMessage
