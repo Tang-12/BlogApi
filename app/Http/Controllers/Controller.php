@@ -6,6 +6,9 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\JWTAuth;
 
 class Controller extends BaseController
 {
@@ -19,5 +22,25 @@ class Controller extends BaseController
   public function _error($msg = '', int $code = 400, $data = array())
   {
     echo json_encode(['code'=>$code, 'msg'=>$msg, 'data'=>$data], JSON_UNESCAPED_UNICODE);
+  }
+
+  // accuess token get user information
+  public function getAuthenticatedInfo()
+  {
+    try{
+      if(!$user = JWTAuth::parseToken()->authenticate()) {
+        return $this->_error('user_not_found');
+      } 
+    }catch(TokenExpiredException $e) {
+      return $this->_error('token_expired',$e->getStatusCode());
+    }catch(TokenExpiredException $e) {
+      return $this->_error('token_invalid', $e->getStatusCode());
+    }catch(JWTException $e) {
+      return $this->_error('token_absent', $e->getStatusCode());
+    }
+    $data = [];
+    $data['u_id'] = $user->id; // user id
+    $data['u_name'] = $user->name; // user name
+    return $data;
   }
 }
