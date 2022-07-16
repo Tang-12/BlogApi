@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Index;
+use App\Http\Controllers\Login;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,4 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('index',[Index::class, 'index']);
+Route::prefix('adminApi/v1')->group(function(){
+    Route::post('register', [Login::class, 'register']);
+});
