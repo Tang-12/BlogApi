@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AdminRequest;
 use App\Models\Admin;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -55,10 +56,7 @@ class Login extends Controller
             if(!Hash::check($password, $info['password'])) {
                 return $this->_error('密码错误');
             }
-            $data = [
-                'id' => $info['id'],
-                'name' => $info['name'],
-            ];
+            $data = Admin::where('name', $name)->select('id', 'name')->first();
             $token = JWTAuth::fromUser($data);
             return $this->_success('成功', $token);
         }catch(\Exception $e){
