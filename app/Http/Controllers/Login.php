@@ -38,4 +38,26 @@ class Login extends Controller
             return $this->_error($e);
         }
     }
+
+    public function login (AdminRequest $request)
+    {
+        try{
+            $request->validate('login');
+            $name = $request->input('name');
+            $password = $request->input('password');
+            $info = Admin::where('name', $name)->first();
+            if (!$info) {
+                return $this->_error('用户不存在');
+            }
+            if($info['status'] == 1) {
+                return $this->_error('用户已被冻结');
+            }
+            if(!Hash::check($password, $info['password'])) {
+                return $this->_error('密码错误');
+            }
+            return $this->_success('成功');
+        }catch(\Exception $e){
+            return $this->_error($e->getMessage()); // 错误信息 $e->getMessage
+        }
+    }
 }
