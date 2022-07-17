@@ -8,7 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
-use Tymon\JWTAuth\JWTAuth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class Controller extends BaseController
 {
@@ -36,7 +36,7 @@ class Controller extends BaseController
     }catch(TokenExpiredException $e) {
       return $this->_error('token_invalid', $e->getStatusCode());
     }catch(JWTException $e) {
-      return $this->_error('token_absent', $e->getStatusCode());
+      return $this->_error('token_absent', $e->getMessage());
     }
     $data = [];
     $data['u_id'] = $user->id; // user id

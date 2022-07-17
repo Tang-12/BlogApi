@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AdminRequest;
-use App\Models\Admin;
-use Illuminate\Support\Facades\DB;
+use App\Models\Admin; 
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -58,7 +57,7 @@ class Login extends Controller
             }
             $data = Admin::where('name', $name)->select('id', 'name')->first();
             $token = JWTAuth::fromUser($data);
-            return $this->_success('成功', $token);
+            return $this->_success('成功', ['token' => 'bearer '.$token]);
         }catch(\Exception $e){
             return $this->_error($e->getMessage()); // 错误信息 $e->getMessage
         }

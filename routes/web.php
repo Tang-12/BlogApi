@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Article;
 use App\Http\Controllers\Login;
 use Illuminate\Support\Facades\Route;
 
@@ -20,4 +21,8 @@ Route::get('/', function () {
 Route::prefix('adminApi/v1')->group(function(){
     Route::post('register', [Login::class, 'register']);
     Route::post('login', [Login::class, 'login']);
+});
+
+Route::prefix('adminApi/v1')->middleware(['refresh.token'])->group(function(){
+    Route::post('article/add', [Article::class, 'articleCreate']);
 });
