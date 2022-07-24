@@ -24,5 +24,9 @@ Route::prefix('adminApi/v1')->group(function(){
 });
 
 Route::prefix('adminApi/v1')->middleware(['refresh.token'])->group(function(){
-    Route::post('article/add', [Article::class, 'articleCreate']);
+    Route::get('articles/list', [Article::class, 'articleList']);
+    Route::post('articles/add', [Article::class, 'articleCreate']);
+    Route::post('articles/update', [Article::class, 'editArticle']);
+    Route::get('articles/status', [Article::class, 'articleStatus']);
+    Route::get('articles/deleted', [Article::class, 'deletedArticles']);
 });

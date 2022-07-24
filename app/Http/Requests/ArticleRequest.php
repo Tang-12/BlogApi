@@ -13,6 +13,7 @@ class ArticleRequest extends BaseRequest
       'id' => 'required|integer',
       'title' => 'required|max: 50',
       'content' => 'required',
+      'limit' => 'number',
     ];
   }
   /**
@@ -30,7 +31,10 @@ class ArticleRequest extends BaseRequest
 
   // verification scenes
   public $scenes = [
+    'list' => ['limit'],
     'add' => ['title', 'content'],
     'update' => ['id','title', 'content'],
+    'status' => ['id'],
+    'deleted' => ['id'],
   ];
 }

@@ -6,59 +6,44 @@ use App\Http\Requests\AdminRequest;
 use App\Models\Admin; 
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Http\Services\LoginService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Redis;
 
 class Login extends Controller
 {
+
     public function register(AdminRequest $request)
     {
-        $request->validate('register');
-        $name = $request->input('name');
-        $password = $request->input('password');
-        $repass = $request->input('repass');
-        if($password !== $repass) {
-            return $this->_error('密码不一致，请重新确认密码');
-        }
-        $info = Admin::where('name', $name)->first();
-        if(isset($info))
-        {
-            return $this->_error('该用户名已存在，请再想想');
-        }
-        if($info['status'] == 1)
-        {
-            return $this->_error('该用户名已被禁用,禁止注册');
-        }
         try{
-            $passwordhash = Hash::make($password);
-            $admin = new Admin();
-            $admin->name = $name;
-            $admin->password = $passwordhash;
-            $admin->save();
+            $name = $request->input('name');
+            $password = $request->input('password');
+            $repass = $request->input('repass');
+            $request->validate('register');
+            $loginService = new LoginService();
+            $loginService->register($name, $password, $repass);
             return $this->_success('成功');
         }catch(\Exception $e){
-            return $this->_error($e);
+            return $this->_error($e->getMessage());
         }
     }
 
     public function login (AdminRequest $request)
     {
+        $name = $request->input('name');
+        $password = $request->input('password');
+        $num = Redis::get($name); 
+        if( $num > 3){
+            return $this->_error('登录错误次数过多请在5分钟后再试！');
+        }
         try{
             $request->validate('login');
-            $name = $request->input('name');
-            $password = $request->input('password');
-            $info = Admin::where('name', $name)->first();
-            if (!$info) {
-                return $this->_error('用户不存在');
-            }
-            if($info['status'] == 1) {
-                return $this->_error('用户已被冻结');
-            }
-            if(!Hash::check($password, $info['password'])) {
-                return $this->_error('密码错误');
-            }
-            $data = Admin::where('name', $name)->select('id', 'name')->first();
-            $token = JWTAuth::fromUser($data);
-            return $this->_success('成功', ['token' => 'bearer '.$token]);
+            Redis::setnx($name, 300, 0);
+            $loginService = new LoginService();
+            $data = $loginService->login($name, $password);
+            return $this->_success('成功', ['token' => $data]);
         }catch(\Exception $e){
+            Redis::incr($name);
             return $this->_error($e->getMessage()); // 错误信息 $e->getMessage
         }
     }
