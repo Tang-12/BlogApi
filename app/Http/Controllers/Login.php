@@ -32,13 +32,13 @@ class Login extends Controller
     {
         $name = $request->input('name');
         $password = $request->input('password');
-        $num = Redis::get($name); 
+        $num = Redis::get($name);
         if( $num > 3){
             return $this->_error('登录错误次数过多请在5分钟后再试！');
         }
         try{
             $request->validate('login');
-            Redis::setnx($name, 300, 0);
+            Redis::set($name, 1, 300);
             $loginService = new LoginService();
             $data = $loginService->login($name, $password);
             return $this->_success('成功', ['token' => $data]);
