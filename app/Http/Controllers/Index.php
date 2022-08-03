@@ -11,4 +11,17 @@ class Index extends Controller
     {   
         $this->_success('成功');
     }
+
+    /**
+     * 获取用户名
+     */
+    public function info()
+    {
+        try {
+            $data = $this->getAuthenticatedInfo();
+            return $this->_success('成功', $data);
+        }catch (\Exception $e) {
+            return $this->_error($e->getMessage());
+        }
+    }
 }

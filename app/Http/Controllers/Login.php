@@ -3,11 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AdminRequest;
-use App\Models\Admin; 
-use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Services\LoginService;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Redis;
 
 class Login extends Controller
@@ -30,14 +26,14 @@ class Login extends Controller
 
     public function login (AdminRequest $request)
     {
-        $name = $request->input('name');
+        $request->validate('login');
+        $name = $request->input('username');
         $password = $request->input('password');
         $num = Redis::get($name);
         if( $num > 3){
             return $this->_error('登录错误次数过多请在5分钟后再试！');
         }
         try{
-            $request->validate('login');
             Redis::set($name, 1, 300);
             $loginService = new LoginService();
             $data = $loginService->login($name, $password);

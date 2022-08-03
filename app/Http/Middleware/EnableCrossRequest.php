@@ -22,19 +22,17 @@ class EnableCrossRequest extends BaseMiddleware
  
         // 允许跨域的域名 可以加在配置里
         $allowOriginHost = [
-            'test.com',
+            'http://localhost',
         ];
  
         $response = $next($request);
- 
         if (in_array($originHost, $allowOriginHost)) {
             $response->header('Access-Control-Allow-Origin', $origin);
             $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, X-CSRF-TOKEN, Accept, Authorization, X-XSRF-TOKEN, Last-Modified');
-            $response->header('Access-Control-Expose-Headers', 'Authorization, authenticated');
+            $response->header('Access-Control-Expose-Headers', 'Authorization');
             $response->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, OPTIONS');
             $response->header('Access-Control-Allow-Credentials', 'true');
         }
- 
         return $response;
     }
 }
