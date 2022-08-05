@@ -29,6 +29,7 @@ Route::prefix('/v1')->group(function(){
 
 Route::prefix('/v1')->middleware(['refresh.token'])->group(function(){
     Route::post('index/info', [Index::class, 'info']);
+    Route::post('index/list', [Index::class, 'menuList']);
     // 文章Api路由
     Route::get('articles/list', [Article::class, 'articleList']);
     Route::post('articles/add', [Article::class, 'articleCreate']);

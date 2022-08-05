@@ -17,19 +17,19 @@ class BaseService
    */
   protected function treeList($data) 
   {
-    $items = [];
-    foreach($data as $value) 
+    $items = array();
+    foreach ($data as $value) 
     {
       $items[$value['id']] = $value;
     }
-    $tree = [];
-    foreach($items as $k=> $v)
+    $tree = array();
+    foreach ($items as $key => $v) 
     {
       if(isset($items[$v['pid']]))
       {
-        $items[$v['pid']]['children'][] = &$items[$k];
+        $items[$v['pid']]['children'][] = &$items[$key];
       }else{
-        $tree = &$items[$k];
+        $tree[] = &$items[$key];
       }
     }
     return $tree;
