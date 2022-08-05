@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Article;
+use App\Http\Controllers\Category;
 use App\Http\Controllers\Index;
 use App\Http\Controllers\Login;
 use App\Http\Controllers\Menu;
@@ -42,4 +43,10 @@ Route::prefix('/v1')->middleware(['refresh.token'])->group(function(){
     Route::post('auth/update', [Menu::class,'updateMenu']);
     Route::get('auth/status', [Menu::class,'menuStatus']);
     Route::get('auth/delete', [Menu::class,'deletedMenu']);
+    // 分类路由
+    Route::get('category/list', [Category::class, 'CategoryList']);
+    Route::post('category/create', [Category::class, 'createdCategory']);
+    Route::post('category/update', [Category::class, 'updatedCategory']);
+    Route::get('category/status', [Category::class, 'categoryStatus']);
+    Route::get('category/delete', [Category::class, 'categoryDelete']);
 });
