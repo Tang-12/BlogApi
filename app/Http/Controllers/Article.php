@@ -3,19 +3,20 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ArticleRequest;
 use App\Http\Services\ArticleService;
+use App\Models\Article as ModelsArticle;
 
 class Article extends Controller
 {
   /**
    * 文章列表
-   * Requests methods: GET
+   * Requests methods: POST
    * @url /adminApi/v1/articles/list
    * return 200 成功 >=400 失败
    */
   public function articleList(ArticleRequest $request)
   {
+    $request->validate('list');
     try {
-      $request->validate('list');
       $title = $request->input('title');
       $limit = $request->input('limit', 20);
       $articleService = new ArticleService();
@@ -34,15 +35,15 @@ class Article extends Controller
    */
   public function articleCreate(ArticleRequest $request)
   {
-    
+    $request->validate('add');
     try {
-      $request->validate('add');
       $u_id = $this->getAuthenticatedInfo();
+      $category_id = $request->input('category_id');
       $title = $request->input('title');
       $desc = $request->input('desc');
       $content = $request->input('content');
       $articleService = new ArticleService();
-      $articleService->createArticle($u_id['u_id'], $title, $desc, $content);
+      $articleService->createArticle($u_id['u_id'], $title, $desc, $content, $category_id);
       return $this->_success('成功');
     } catch (\Exception $e) {
       return $this->_error($e->getMessage());
@@ -57,14 +58,15 @@ class Article extends Controller
    */
   public function editArticle(ArticleRequest $request)
   {
+    $request->validate('update');
     try{
-      $request->validate('update');
       $id = $request->input('id');
-      $title = $request->input('title');
+      $category_id = $request->input('category_id');
+      $title = $request->input('article_title');
       $desc = $request->input('desc');
       $content = $request->input('content');
       $articleService = new ArticleService();
-      $articleService->updateArticle($id, $title, $desc, $content);
+      $articleService->updateArticle($id, $title, $desc, $content, $category_id);
       return $this->_success('成功');
     }catch (\Exception $e) {
       return $this->_error($e->getMessage());
@@ -108,5 +110,28 @@ class Article extends Controller
     } catch(\Exception $e){
       return $this->_error($e->getMessage());
     }
+  }
+
+  /**
+   * 数据回显
+   * Request method: GET
+   * @url /api/v1/articles/info
+   * @params int  id
+   * return 200 成功 >=400失败
+   */
+
+  public function articleInfo(ArticleRequest $request)
+  {
+
+      try {
+        $id = $request->input('id', 0);
+        $data = ModelsArticle::join('users', 'articles.user_id', '=', 'users.id')
+          ->where('articles.id', $id)
+          ->select('articles.id', 'articles.article_title', 'articles.desc', 'articles.content', 'articles.category_id', 'users.name')
+          ->first();
+        return $this->_success('成功', $data);
+      }catch (\Exception $e){
+        return $this->_error('失败');
+      }
   }
 }

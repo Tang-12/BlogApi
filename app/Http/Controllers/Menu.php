@@ -16,12 +16,9 @@ class Menu extends Controller
    */
   public function menuList(MenuRequest $request)
   {
-    $request->validate('list');
     try {
-      $name = $request->input('name');
-      $limit = $request->input('limit', 20);
       $menuService = new MenuService();
-      $data = $menuService->list($name, $limit);
+      $data = $menuService->list();
       return $this->_success('成功', $data);
     } catch (\Exception $e) {
       return $this->_error($e->getMessage());
@@ -42,10 +39,14 @@ class Menu extends Controller
     $request->validate('add');
     try {
       $pid = $request->input('pid');
-      $name = $request->input('title');
+      $name = $request->input('name');
+      $icon = $request->input('icon');
+      $path = $request->input('path');
+      $controller = $request->input('controller');
+      $methods = $request->input('methods');
       $is_nav = $request->input('is_nav');
       $menuServices = new MenuService();
-      $menuServices->createMenu($pid, $name, $is_nav);
+      $menuServices->createMenu($pid, $name, $icon, $path, $controller, $methods,$is_nav);
       return $this->_success('成功');
     } catch (\Exception $e) {
       return $this->_error($e->getMessage()); // TODO: throw exception
@@ -62,16 +63,20 @@ class Menu extends Controller
    * @param string $title
    * @return string HTTP response code 200 success  400 fail code
    */
-  public function updateMenu(MenuRequest $request) 
+  public function updateMenu(MenuRequest $request)
   {
     $request->validate('update');
     try{
       $id = $request->input('id');
       $pid = $request->input('pid', 0);
-      $name = $request->input('title');
+      $name = $request->input('name');
+      $icon = $request->input('icon');
+      $path = $request->input('path');
+      $controller = $request->input('controller');
+      $methods = $request->input('methods');
       $is_nav = $request->input('is_nav');
       $menuServices = new MenuService();
-      $menuServices->updateMenu($id, $pid, $name, $is_nav);
+      $menuServices->updateMenu($id, $pid, $name, $icon, $path, $controller, $methods, $is_nav);
       return $this->_success('成功');
     }catch(\Exception $e){
       return $this->_error($e->getMessage()); // error messages
@@ -114,6 +119,18 @@ class Menu extends Controller
       $menuService->deletedMenu($id);
       return $this->_success('成功');
     } catch (\Exception $e) {
+      return $this->_error($e->getMessage());
+    }
+  }
+
+  public function infoMenu(MenuRequest $request)
+  {
+    $request->validate('info');
+    try {
+      $id = $request->input('id');
+      $result =\App\Models\Menu::where(['id'=> $id])->select('id', 'pid', 'name', 'icon', 'path', 'controller', 'methods', 'is_nav')->first();
+      return $this->_success('成功', $result);
+    }catch (\Exception $e){
       return $this->_error($e->getMessage());
     }
   }

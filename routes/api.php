@@ -35,11 +35,13 @@ Route::prefix('/v1')->middleware(['refresh.token'])->group(function(){
     Route::get('articles/list', [Article::class, 'articleList']);
     Route::post('articles/add', [Article::class, 'articleCreate']);
     Route::post('articles/update', [Article::class, 'editArticle']);
+    Route::get('articles/info', [Article::class, 'articleInfo']);
     Route::get('articles/status', [Article::class, 'articleStatus']);
     Route::get('articles/deleted', [Article::class, 'deletedArticles']);
     //菜单权限api
     Route::get('auth/list', [Menu::class,'menuList']);
     Route::post('auth/create', [Menu::class,'createMenu']);
+    Route::get('auth/info', [Menu::class,'infoMenu']);
     Route::post('auth/update', [Menu::class,'updateMenu']);
     Route::get('auth/status', [Menu::class,'menuStatus']);
     Route::get('auth/delete', [Menu::class,'deletedMenu']);
@@ -47,6 +49,22 @@ Route::prefix('/v1')->middleware(['refresh.token'])->group(function(){
     Route::get('category/list', [Category::class, 'CategoryList']);
     Route::post('category/create', [Category::class, 'createdCategory']);
     Route::post('category/update', [Category::class, 'updatedCategory']);
+    Route::get('category/info', [Category::class, 'info']);
     Route::get('category/status', [Category::class, 'categoryStatus']);
     Route::get('category/delete', [Category::class, 'categoryDelete']);
+    Route::get('category/select', [Category::class, 'categorySelect']);
+    // 用户
+    Route::get('user/list', [\App\Http\Controllers\User::class, 'userList']);
+    Route::post('user/created', [\App\Http\Controllers\User::class, 'created']);
+    Route::get('user/info', [\App\Http\Controllers\User::class, 'userInfo']);
+    Route::post('user/update', [\App\Http\Controllers\User::class, 'userUpdate']);
+    Route::get('user/status', [\App\Http\Controllers\User::class, 'userStatus']);
+    Route::get('user/deleted', [\App\Http\Controllers\User::class, 'deletedUser']);
+    // 管理员
+    Route::get('admin/list', [\App\Http\Controllers\Admin::class, 'listUsers']);
+    Route::post('admin/add', [\App\Http\Controllers\Admin::class, 'addAdmin']);
+    Route::get('admin/info', [\App\Http\Controllers\Admin::class, 'adminInfo']);
+    Route::post('admin/edit', [\App\Http\Controllers\Admin::class, 'updateAdmin']);
+    Route::get('admin/status', [\App\Http\Controllers\Admin::class, 'statusAdmin']);
+    Route::get('admin/deleted', [\App\Http\Controllers\Admin::class, 'deletedAdmin']);
 });

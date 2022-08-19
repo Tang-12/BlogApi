@@ -9,11 +9,12 @@ class AuthService extends BaseService
   public function authList($name, $limit)
   {
     $where = array();
-    if (!empty($name)) 
+    if (!empty($name))
     {
       $where[] = ['name', 'like', '%' . $name. '%'];
     }
-    return Auth::where($where)->paginate($limit);
+    $list = Auth::where($where)->orderBy('created_at', 'desc')->get();
+    return $this->treeList($list);
   }
   /**
    * 添加权限

@@ -8,7 +8,7 @@ class Category extends Controller
 {
   public function CategoryList(CategoryRequest $request)
   {
-    $request->validate('list');
+//    $request->validate('list');
     try {
       $title = $request->input('title');
       $categoryService = new CategoryService();
@@ -29,7 +29,7 @@ class Category extends Controller
       $categoryService->created($pid, $title);
       return $this->_success('成功');
     } catch (\Exception $e) {
-      return $this->_error($e->getMessage()); // TODO 
+      return $this->_error($e->getMessage()); // TODO
     }
   }
 
@@ -70,6 +70,28 @@ class Category extends Controller
       $categoryService->deleted($id);
       return $this->_success('成功');
     }catch (\Exception $e) {
+      return $this->_error($e->getMessage());
+    }
+  }
+
+  public function categorySelect()
+  {
+    try {
+      $categoryService = new CategoryService();
+      $data = $categoryService->select();
+      return $this->_success('成功', $data);
+    }catch (\Exception $e){
+      return $this->_error($e->getMessage());
+    }
+  }
+
+  public function info(CategoryRequest $request)
+  {
+    try {
+      $id = $request->input('id');
+      $res = \App\Models\Category::where('id', $id)->select('id', 'pid', 'title')->first();
+      return $this->_success('成功', $res);
+    }catch (\Exception $e){
       return $this->_error($e->getMessage());
     }
   }

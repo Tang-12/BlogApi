@@ -11,9 +11,10 @@ class ArticleRequest extends BaseRequest
   {
     return [
       'id' => 'required|integer',
-      'title' => 'required|max: 50',
+      'article_title' => 'required|max: 50',
       'content' => 'required',
-      'limit' => 'number',
+      'limit' => 'integer',
+      'category_id' =>'required|integer',
     ];
   }
   /**
@@ -23,17 +24,20 @@ class ArticleRequest extends BaseRequest
   public function messages()
   {
     return [
-      'title.required' => '文章标题必须', 
-      'title.max' => '文章最多为50个字符', 
-      'content.required' => '文章内容必须', 
+      'article_title.required' => '文章标题必须',
+      'article_title.max' => '文章最多为50个字符',
+      'content.required' => '文章内容必须',
+      'limit.integer' => '分页数必须是数字',
+      'category_id.required' => '文章分类不能为空',
+      'category_id.integer' => '文章分类id必须是数组'
     ];
   }
 
   // verification scenes
   public $scenes = [
     'list' => ['limit'],
-    'add' => ['title', 'content'],
-    'update' => ['id','title', 'content'],
+    'add' => ['article_title', 'content', 'category_id'],
+    'update' => ['id','article_title', 'content', 'category_id'],
     'status' => ['id'],
     'deleted' => ['id'],
   ];

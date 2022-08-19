@@ -20,15 +20,15 @@ class RefreshToken extends BaseMiddleware
         return $next($request);
       }
       // throw new UnauthorizedHttpException('jwt-auth',json_encode(['status' => 401,'msg' => '未登录']));
-      throw new Exception('请先登录', 401);
+        echo (json_encode(['code'=> 401, 'msg'=> '请先登录'])); exit();
     }catch(TokenExpiredException $e){
       try {
         $token = $this->auth->refresh(); //刷新请求token
-        Auth::guard('adminApi')->onceUsingId($this->auth->manager()->getPayloadFactory()->buildClaimsCollection()->toPlainArray()['sub']);
+//        Auth::guard('adminApi')->onceUsingId($this->auth->manager()->getPayloadFactory()->buildClaimsCollection()->toPlainArray()['sub']);
       } catch (JWTException $exception) {
         // refresh也过期了，需要重新登录
-        // throw new UnauthorizedHttpException('jwt-auth',json_encode(['status' => 401 , 'msg' => '未登录']));
-        throw new Exception('令牌已过期', 401);
+//         throw new UnauthorizedHttpException('jwt-auth',json_encode(['status' => 401 , 'msg' => '未登录']));
+         echo (json_encode(['code'=> 401, 'msg'=> '无效token'])); exit();
       }
     }
     //在响应头中返回新的token

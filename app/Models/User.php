@@ -1,15 +1,22 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Category extends Model
+class User extends Model
 {
-  use SoftDeletes; // enable soft deletes
+  use SoftDeletes;
   public $timestamps = true;
   const UPDATED_AT = null;
   const DELETED_AT = 'deleted_time';
+
+  public function articles()
+  {
+    return $this->hasMany('App\models\Article', 'user_id');
+  }
+
   /**
    * 为数组 / JSON 序列化准备日期。
    *

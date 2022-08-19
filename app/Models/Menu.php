@@ -10,4 +10,9 @@ class Menu extends Model
   public $timestamps = true;
   const UPDATED_AT = null;
   const DELETED_AT = 'deleted_time';
+
+  protected function serializeDate(\DateTimeInterface $date)
+  {
+    return $date->format($this->dateFormat ?: 'Y-m-d H:i:s');
+  }
 }

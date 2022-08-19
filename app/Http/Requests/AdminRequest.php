@@ -10,8 +10,11 @@ class AdminRequest extends BaseRequest
   public function rules()
   {
     return [
+      'id' => 'required|numeric',
       'username' => 'required|max: 8',
       'password' => 'required|min: 6|max: 12',
+      'limit' => 'required|numeric',
+      'auth_id' => 'required|numeric',
     ];
   }
 
@@ -23,15 +26,25 @@ class AdminRequest extends BaseRequest
   {
     return [
       'username.required' => '用户名必须',
-      'name.min' => '用户最多只能为8个字符',
+      'username.min' => '用户最多只能为8个字符',
       'password.required' => '密码必须',
       'password.min' => '密码最少不能低于6位',
       'password.max' => '密码最大不能超过12位',
+      'limit.required' => '分页不能为空',
+      'limit.numeric' => '分页必须是数字',
+      'auth_id.required' => '权限不能为空',
+      'auth_id.numeric' => '权限参数必须是数字',
     ];
   }
 
   public $scenes = [
-    'login' => ['name', 'password'],
-    'register' => ['name', 'password'],
+    'list' => ['limit'],
+    'add' => ['username', 'password', 'auth_id'],
+    'update' => ['id', 'username', 'auth_id'],
+    'delete' => ['id'],
+    'status' => ['id'],
+    'info' => ['id'],
+    'login' => ['username', 'password'],
+    'register' => ['username', 'password'],
   ];
 }

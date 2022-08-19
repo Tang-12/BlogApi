@@ -8,14 +8,14 @@ class CategoryService extends BaseService
 {
   /**
    * 分类列表
-   */ 
+   */
   public function list($title)
   {
     $where = array();
     if(!empty($title)) {
       $where[] = ['title', 'like', '%'.$title.'%'];
     }
-    $result = Category::where($where)->orderby('created_at DESC')->get();
+    $result = Category::where($where)->get()->toArray();
     $result = $this->treeList($result);
     return $result;
   }
@@ -25,12 +25,12 @@ class CategoryService extends BaseService
    */
   public function created($pid, $title)
   {
-    if(Category::where(['pid' => $pid, 'title' => $title])->whereNull('deleted_time')->get())
+    if(Category::where(['title' => $title])->first())
     {
       throw new Exception('该分类已添加，请勿重复添加', 400);
     }
     $level = 0;
-    if($pid > 0) 
+    if($pid > 0)
     {
       $parent = Category::where('id', $pid)->first();
       $level = $parent['level']+1;
@@ -44,7 +44,7 @@ class CategoryService extends BaseService
 
   /**
    * 修改分类
-   */ 
+   */
   public function update($id, $pid, $title)
   {
     $level = 0;
@@ -66,6 +66,9 @@ class CategoryService extends BaseService
    */
   public function status($id)
   {
+    if(Category::where('pid', $id)->first()){
+      throw new Exception('有子级菜单,无法禁用', 400);
+    }
     $category = Category::find($id);
     $category->status = $category['status'] == 0 ? 1 : 0;
     $category->updated_at = date('Y-m-d H:i:s', time());
@@ -78,5 +81,15 @@ class CategoryService extends BaseService
   public function deleted($id)
   {
     return Category::destroy($id);
+  }
+
+  /**
+   * 分类选项
+   */
+  public function select()
+  {
+    $result = Category::whereNull('deleted_time')->select('id', 'pid', 'title')->get()->toArray();
+    $data = $this->treeList($result);
+    return $data;
   }
 }

@@ -9,9 +9,15 @@ class Auth extends Controller
   public function authList(AuthRequest $request)
   {
     $request->scene('list');
-    $name = $request->input('name');
-    $limit = $request->input('limit', 10);
-
+    try {
+      $name = $request->input('name');
+      $limit = $request->input('limit', 10);
+      $AuthService = new AuthService();
+      $reult = $AuthService->authList($name, $limit);
+      return $this->_success('成功', $reult);
+    }catch (\Exception $e){
+      return $this->_error($e->getMessage());
+    }
   }
 
   public function createAuth(AuthRequest $request)
