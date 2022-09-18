@@ -6,14 +6,18 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class MenuService extends BaseService
 {
+  public function nav()
+  {
+    $data = Menu::where('status', 1)->select('parentId', 'id', 'name', 'url', 'menu', 'type', 'icon', 'sort', 'iframe')->get();
+    return $data;
+  }
   /**
    * 菜单列表
    */
   public function list()
   {
-    $list = Menu::select('id', 'pid', 'name', 'level', 'status', 'created_at', 'is_nav', 'icon')->get()->toArray();
-    $result = $this->treeList($list);
-    return $result;
+    $data = Menu::select('parentId', 'id', 'name', 'url', 'menu', 'type', 'icon', 'sort', 'iframe')->get();
+    return $data;
   }
 
   public function createMenu($pid, $name,$icon, $path, $controller, $methods, $is_nav)

@@ -12,7 +12,7 @@ class Login extends Controller
     public function register(AdminRequest $request)
     {
         try{
-            $name = $request->input('name');
+            $name = $request->input('username');
             $password = $request->input('password');
             $repass = $request->input('repass');
             $request->validate('register');
@@ -37,7 +37,7 @@ class Login extends Controller
             Redis::set($name, 1, 300);
             $loginService = new LoginService();
             $data = $loginService->login($name, $password);
-            return $this->_success('成功', ['token' => $data]);
+            return $this->_success('成功', ['token' => $data, 'name' => $name]);
         }catch(\Exception $e){
             Redis::incr($name);
             return $this->_error($e->getMessage()); // 错误信息 $e->getMessage

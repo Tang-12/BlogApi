@@ -13,11 +13,11 @@ class AdminService extends BaseService
     if(!empty($name)){
       $where[] = ['admins.name', 'like', '%'.$name.'%'];
     }
-    $result = Admin::leftjoin('auth', 'admins.auth_id', '=', 'auth.id')
+    $result = Admin::leftjoin('auths', 'admins.auth_id', '=', 'auths.id')
     ->where($where)
-    ->select('admins.id','admins.name', 'admins.status', 'admins.created_at', 'auth.name as auth_name')
+    ->select('admins.id','admins.name', 'admins.status', 'admins.created_at', 'auths.name as auth_name')
     ->orderBy('id', 'asc')
-    ->paginate($limit);
+    ->simplePaginate($limit);
     return $result;
   }
 

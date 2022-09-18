@@ -2,14 +2,26 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MenuRequest;
-use App\Http\Services\MenuService;
+use App\Http\Services\MenuService; 
 
 class Menu extends Controller
 {
+
+  public function menuNav()
+  {
+    try {
+      $menu = new MenuService();
+      $list = $menu->nav();
+      return $this->_success('成功', $list);
+    } catch (\Exception $e) {
+      return $this->_error($e->getMessage());
+    }
+  }
+
   /**
    * 菜单列表
    * @url adminApi/v1/auth/list
-   * Request method: GET
+   * Request method: POST
    * @param string $title
    * @param number $limit
    * @return string HTTP response code 200 success  400 fail code
@@ -134,4 +146,5 @@ class Menu extends Controller
       return $this->_error($e->getMessage());
     }
   }
+
 }

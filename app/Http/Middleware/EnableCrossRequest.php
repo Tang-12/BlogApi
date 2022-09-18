@@ -15,25 +15,12 @@ class EnableCrossRequest extends BaseMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $origin     = $request->server('HTTP_ORIGIN') ? $request->server('HTTP_ORIGIN') : '';
-        $originHost = parse_url($origin, PHP_URL_HOST);
-        $originPort = parse_url($origin, PHP_URL_PORT);
-        $originHost .= $originPort ? ':' . $originPort : '';
- 
-        // 允许跨域的域名 可以加在配置里
-        $allowOriginHost = [
-            'localhost:8080',
-        ];
-
         $response = $next($request);
-        if (true||in_array($originHost, $allowOriginHost)) {
-
-            $response->header('Access-Control-Allow-Origin', 'http://localhost:8080');
-            $response->header('Access-Control-Allow-Headers', 'Accept,Authorization,DNT,Content-Type,Referer,User-Agent');
-            $response->header('Access-Control-Expose-Headers', 'Authorization');
-            $response->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, OPTIONS');
-            $response->header('Access-Control-Allow-Credentials', 'false');
-        }
+        $response->header('Access-Control-Allow-Origin', '*');
+        $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, Accept');
+        $response->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, OPTIONS,DELETE');
+        $response->header('Access-Control-Allow-Headers', 'DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type, Accept-Language, Origin, Accept-Encoding');
+        $response->header('Access-Control-Allow-Credentials', 'false');
         return $response;
     }
 }

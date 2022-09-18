@@ -23,7 +23,7 @@ use App\Http\Controllers\Menu;
     return $request->user();
 }); */
 
-Route::prefix('/v1')->group(function(){
+Route::prefix('/v1')/* ->middleware(['api.cross']) */->group(function(){
     Route::post('register', [Login::class, 'register']);
     Route::post('login', [Login::class, 'login']);
 });
@@ -39,12 +39,13 @@ Route::prefix('/v1')->middleware(['refresh.token'])->group(function(){
     Route::get('articles/status', [Article::class, 'articleStatus']);
     Route::get('articles/deleted', [Article::class, 'deletedArticles']);
     //菜单权限api
-    Route::get('auth/list', [Menu::class,'menuList']);
-    Route::post('auth/create', [Menu::class,'createMenu']);
-    Route::get('auth/info', [Menu::class,'infoMenu']);
-    Route::post('auth/update', [Menu::class,'updateMenu']);
-    Route::get('auth/status', [Menu::class,'menuStatus']);
-    Route::get('auth/delete', [Menu::class,'deletedMenu']);
+    Route::post('menu/nav', [Menu::class,'menuNav']);
+    Route::post('menu/list', [Menu::class,'menuList']);
+    Route::post('menu/create', [Menu::class,'createMenu']);
+    Route::get('menu/info', [Menu::class,'infoMenu']);
+    Route::post('menu/update', [Menu::class,'updateMenu']);
+    Route::get('menu/status', [Menu::class,'menuStatus']);
+    Route::get('menu/delete', [Menu::class,'deletedMenu']); 
     // 分类路由
     Route::get('category/list', [Category::class, 'CategoryList']);
     Route::post('category/create', [Category::class, 'createdCategory']);
@@ -67,4 +68,11 @@ Route::prefix('/v1')->middleware(['refresh.token'])->group(function(){
     Route::post('admin/edit', [\App\Http\Controllers\Admin::class, 'updateAdmin']);
     Route::get('admin/status', [\App\Http\Controllers\Admin::class, 'statusAdmin']);
     Route::get('admin/deleted', [\App\Http\Controllers\Admin::class, 'deletedAdmin']);
+    // 角色
+    Route::get('role/list', [\App\Http\Controllers\Auth::class, 'listAuths']);
+    Route::get('role/info', [\App\Http\Controllers\Auth::class, 'authInfo']);
+    Route::post('role/add', [\App\Http\Controllers\Auth::class, 'createAuth']);
+    Route::post('role/edit', [\App\Http\Controllers\Auth::class, 'editAuth']);
+    Route::get('role/status', [\App\Http\Controllers\Auth::class, 'authStatus']);
+    Route::get('role/del', [\App\Http\Controllers\Auth::class, 'deletedAuth']);
 });
