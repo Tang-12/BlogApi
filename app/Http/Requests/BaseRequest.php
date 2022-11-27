@@ -17,7 +17,7 @@ class BaseRequest extends FormRequest
 
   public function authorize()
   {
-    return true;
+    return false;
   }
 
   /**
@@ -65,11 +65,14 @@ class BaseRequest extends FormRequest
   {
     $rules = $this->container->call([$this, 'rules']);
     $newRules = [];
-    if ($this->currentScene && isset($this->scenes[$this->currentScene])) {
+    if ($this->currentScene && isset($this->scenes[$this->currentScene])) 
+    {
         $sceneFields = is_array($this->scenes[$this->currentScene])
             ? $this->scenes[$this->currentScene] : explode(',', $this->scenes[$this->currentScene]);
-        foreach ($sceneFields as $field) {
-            if (array_key_exists($field, $rules)) {
+        foreach ($sceneFields as $field) 
+        {
+            if (array_key_exists($field, $rules)) 
+            {
                 $newRules[$field] = $rules[$field];
             }
         }
@@ -110,7 +113,6 @@ class BaseRequest extends FormRequest
   protected function failedValidation(Validator $validator)
   {
       $error= $validator->errors()->all();
-      throw new HttpResponseException(response()->json(['code'=>400,'msg'=>$error['0'],'data'=>[]]));
+      throw new HttpResponseException(response()->json(['code'=>400,'msg'=>$error['0'],'data'=>['参数错误']]));
   }
 }
-

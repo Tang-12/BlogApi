@@ -24,7 +24,7 @@ class RefreshToken extends BaseMiddleware
     }catch(TokenExpiredException $e){
       try {
         $token = $this->auth->refresh(); //刷新请求token
-//        Auth::guard('adminApi')->onceUsingId($this->auth->manager()->getPayloadFactory()->buildClaimsCollection()->toPlainArray()['sub']);
+        Auth::guard('adminApi')->onceUsingId($this->auth->manager()->getPayloadFactory()->buildClaimsCollection()->toPlainArray()['sub']);
       } catch (JWTException $exception) {
         // refresh也过期了，需要重新登录
 //         throw new UnauthorizedHttpException('jwt-auth',json_encode(['status' => 401 , 'msg' => '未登录']));

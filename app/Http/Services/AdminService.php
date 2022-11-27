@@ -10,7 +10,8 @@ class AdminService extends BaseService
   public function adminList($name, $limit)
   {
     $where  = [];
-    if(!empty($name)){
+    if(!empty($name))
+    {
       $where[] = ['admins.name', 'like', '%'.$name.'%'];
     }
     $result = Admin::leftjoin('auth', 'admins.auth_id', '=', 'auth.id')
@@ -77,7 +78,7 @@ class AdminService extends BaseService
   public function deleteAdmin($id)
   {
     $info = Admin::select('id' ,'auth_id')->first();
-    if($info['auth_id'] != 1)
+    if($info['auth_id'] == 1)
     {
       throw new Exception('没有该操作权限', 400);
     }

@@ -9,10 +9,17 @@ use Illuminate\Support\Facades\Redis;
 class Login extends Controller
 {
 
+    /**
+     * @url /index.php/api/v1/register
+     * @param string username 用户名
+     * @param string password 密码
+     * @param string repass 确认密码
+     * return code 200 成功 >= 400失败
+     */
     public function register(AdminRequest $request)
     {
         try{
-            $name = $request->input('name');
+            $name = $request->input('username');
             $password = $request->input('password');
             $repass = $request->input('repass');
             $request->validate('register');
@@ -24,12 +31,20 @@ class Login extends Controller
         }
     }
 
+    /**
+     * @url /index.php/api/v1/lgoin
+     * @param string username 用户名
+     * @param string password 密码 
+     * return code 200 成功 >= 400失败
+     */
     public function login (AdminRequest $request)
     {
         $request->validate('login');
         $name = $request->input('username');
         $password = $request->input('password');
-        $num = Redis::get($name);
+        $ip = $request->ip();
+        $info = $name.$ip;
+        $num = Redis::get($info);
         if( $num > 3){
             return $this->_error('登录错误次数过多请在5分钟后再试！');
         }
