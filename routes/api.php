@@ -39,12 +39,12 @@ Route::prefix('/v1')->middleware(['refresh.token'])->group(function(){
     Route::get('articles/status', [Article::class, 'articleStatus']);
     Route::get('articles/deleted', [Article::class, 'deletedArticles']);
     //菜单权限api
-    Route::get('auth/list', [Menu::class,'menuList']);
-    Route::post('auth/create', [Menu::class,'createMenu']);
-    Route::get('auth/info', [Menu::class,'infoMenu']);
-    Route::post('auth/update', [Menu::class,'updateMenu']);
-    Route::get('auth/status', [Menu::class,'menuStatus']);
-    Route::get('auth/delete', [Menu::class,'deletedMenu']);
+    Route::get('menu/list', [Menu::class,'menuList']);
+    Route::post('menu/create', [Menu::class,'createMenu']);
+    Route::get('menu/info', [Menu::class,'infoMenu']);
+    Route::post('menu/update', [Menu::class,'updateMenu']);
+    Route::get('menu/status', [Menu::class,'menuStatus']);
+    Route::get('menu/delete', [Menu::class,'deletedMenu']);
     // 分类路由
     Route::get('category/list', [Category::class, 'CategoryList']);
     Route::post('category/create', [Category::class, 'createdCategory']);

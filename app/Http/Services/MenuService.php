@@ -42,23 +42,23 @@ class MenuService extends BaseService
 
   public function updateMenu($id, $pid, $name,$icon, $path, $controller, $methods, $is_nav)
   {
-    $parent_id = Menu::where('id', $pid)->first();
-    $menu = Menu::find($id);
-    if($parent_id['pid'] == 0){
+    $arr = [];
+    if($pid > 0 )
+    {
+      $parent_id = Menu::where('id', $pid)->first();
       $level = 0;
-    }else{
-      $level = $parent_id['level']+1;
+      if($parent_id['pid'] > 0){
+        $level = $parent_id['level']+1;
+      }
+      $arr['level'] = $level;
     }
-    $menu->pid = $pid;
-    $menu->name = $name;
-    $menu->icon = $icon;
-    $menu->path = $path;
-    $menu->level = $level;
-    $menu->controller = $controller;
-    $menu->methods = $methods;
-    $menu->is_nav = $is_nav;
-    $menu->updated_at = date('Y-m-d H:i:s', time());
-    return $menu->save();
+    $arr= ['pid'=> $pid,'name'=> $name, 'icon'=> $icon, 'path'=> $path,'controller'=> $controller,'updated_at'=>date('Y-m-d H:i:s', time()),'methods'=> $methods, 'is_nav'=> $is_nav];
+    $res = Menu::where('id',$id)->update($arr);
+    if($res != true)
+    {
+      return false;
+    }
+    return true;
   }
 
   public function changeStatus($id)

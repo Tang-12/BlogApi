@@ -68,7 +68,7 @@ class Menu extends Controller
     $request->validate('update');
     try{
       $id = $request->input('id');
-      $pid = $request->input('pid', 0);
+      $pid = $request->input('pid',0);
       $name = $request->input('name');
       $icon = $request->input('icon');
       $path = $request->input('path');

@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 use Closure;
 use Exception;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
@@ -27,7 +26,6 @@ class RefreshToken extends BaseMiddleware
         Auth::guard('adminApi')->onceUsingId($this->auth->manager()->getPayloadFactory()->buildClaimsCollection()->toPlainArray()['sub']);
       } catch (JWTException $exception) {
         // refresh也过期了，需要重新登录
-//         throw new UnauthorizedHttpException('jwt-auth',json_encode(['status' => 401 , 'msg' => '未登录']));
          echo (json_encode(['code'=> 401, 'msg'=> '无效token'])); exit();
       }
     }
