@@ -14,7 +14,7 @@ class User extends Model
 
   public function articles()
   {
-    return $this->hasMany('App\models\Article', 'user_id');
+    return $this->hasMany('App\models\Article', 'u_id');
   }
 
   /**

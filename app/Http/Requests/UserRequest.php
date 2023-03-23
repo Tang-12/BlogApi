@@ -14,7 +14,7 @@ class UserRequest extends BaseRequest
       'id' => 'required|numeric',
       'username' => 'required|max: 8',
       'password' => 'required|min: 6|max: 12',
-      'email' => 'email',
+      'email' => 'email:rfc,dns',
       'limit' => 'numeric',
     ];
   }
@@ -36,7 +36,7 @@ class UserRequest extends BaseRequest
 
   public $scenes = [
     'list' => ['limit'],
-    'created' => ['username', 'password'],
+    'created' => ['username', 'password','email'],
     'updated' => ['id', 'username', 'email'],
     'deleted' => ['id'],
     'status' => ['id'],

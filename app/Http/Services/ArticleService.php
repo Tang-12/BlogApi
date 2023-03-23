@@ -14,7 +14,7 @@ class ArticleService extends BaseService
     if(!empty($title)) {
       $where[] = ['article_title', 'like', '%'.$title.'%'];
     }
-    $data = ModelsArticle::join('users', 'articles.user_id', '=', 'users.id')
+    $data = ModelsArticle::join('users', 'articles.u_id', '=', 'users.id')
       ->join('categories', 'articles.category_id', '=', 'categories.id')
       ->where($where)
       ->select('articles.id', 'articles.article_title', 'articles.desc', 'articles.status', 'articles.created_at', 'articles.category_id', 'users.name', 'categories.title as category_name')
@@ -29,8 +29,8 @@ class ArticleService extends BaseService
   public function createArticle($u_id, $title, $desc, $content, $category_id)
   {
     $article = new ModelsArticle;
-    $article->user_id = $u_id;
-    $article->article_title = $title;
+    $article->u_id = $u_id;
+    $article->title = $title;
     $article->desc = $desc;
     $article->content = $content;
     $article->category_id = $category_id;
@@ -44,7 +44,7 @@ class ArticleService extends BaseService
   public function updateArticle($id, $title, $desc, $content, $category_id)
   {
       $article = ModelsArticle::find($id);
-      $article->article_title = $title;
+      $article->title = $title;
       $article->desc = $desc;
       $article->content = $content;
       $article->updated_at = date('Y-m-d H:i:s', time());

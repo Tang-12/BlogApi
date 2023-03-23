@@ -39,7 +39,7 @@ class Article extends Controller
     try {
       $u_id = $this->getAuthenticatedInfo();
       $category_id = $request->input('category_id');
-      $title = $request->input('title');
+      $title = $request->input('article_title');
       $desc = $request->input('desc');
       $content = $request->input('content');
       $articleService = new ArticleService();
