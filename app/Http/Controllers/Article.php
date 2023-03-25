@@ -17,7 +17,7 @@ class Article extends Controller
   {
     $request->validate('list');
     try {
-      $title = $request->input('title');
+      $title = $request->input('keyword');
       $limit = $request->input('limit', 20);
       $articleService = new ArticleService();
       $data = $articleService->articleList($title, $limit);

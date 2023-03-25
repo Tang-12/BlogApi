@@ -2,24 +2,26 @@
 namespace App\Http\Services;
 
 use App\Models\Article as ModelsArticle;
+use Illuminate\Support\Facades\DB;
 
 class ArticleService extends BaseService
 {
   /**
    * 文章列表
    */
-  public function articleList($title, $limit = 20)
+  public function articleList($keyword, $limit = 20)
   {
-    $where = [];
-    if(!empty($title)) {
-      $where[] = ['article_title', 'like', '%'.$title.'%'];
-    }
-    $data = ModelsArticle::join('users', 'articles.u_id', '=', 'users.id')
-      ->join('categories', 'articles.category_id', '=', 'categories.id')
-      ->where($where)
-      ->select('articles.id', 'articles.article_title', 'articles.desc', 'articles.status', 'articles.created_at', 'articles.category_id', 'users.name', 'categories.title as category_name')
-      ->orderBy('created_at', 'desc')
-      ->paginate($limit);
+    $data = DB::table('articles')
+    ->join('users','articles.u_id','=','users.id')
+    ->join('categories', 'articles.category_id','=','categories.id')
+    ->select('articles.id','articles.title','articles.status','articles.created_at','categories.title as category_name','users.name')
+    ->where(function($query) use($keyword){
+      $query->orWhere('articles.title', 'like', '%'.$keyword.'%');
+      $query->orWhere('categories.title', 'like', '%'.$keyword.'%');
+      $query->orWhere('users.name', 'like', '%'.$keyword.'%');
+    })
+    ->orderBy('articles.created_at', 'desc')
+    ->get();    
     return $data;
   }
 
