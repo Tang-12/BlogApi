@@ -3,6 +3,7 @@ namespace App\Http\Services;
 
 use App\Models\Admin;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AdminService extends BaseService
@@ -12,47 +13,50 @@ class AdminService extends BaseService
     $where  = [];
     if(!empty($name))
     {
-      $where[] = ['admins.name', 'like', '%'.$name.'%'];
+      $where[] = ['admins.username', 'like', '%'.$name.'%'];
     }
     $result = Admin::leftjoin('auth', 'admins.auth_id', '=', 'auth.id')
     ->where($where)
-    ->select('admins.id','admins.name', 'admins.status', 'admins.created_at', 'auth.name as auth_name')
+    ->select('admins.id','admins.username', 'admins.status', 'admins.created_at', 'auth.name as auth_name','admins.auth_id')
     ->orderBy('id', 'asc')
     ->paginate($limit);
     return $result;
   }
 
-  public function addAdmin($name, $password, $repass, $authId)
+  public function addAdmin($name, $password, $repass, $authId, $nickname)
   {
     if($password != $repass)
     {
       throw new Exception('密码不一致', 400);
     }
-    $info = Admin::where('name', $name)->first();
+    $info = Admin::where('username', $name)->get()->toArray();
     if($info)
     {
       throw new Exception('该用户名已存在');
     }
-    if($info['status'] != 0)
+    if(!empty($info))
     {
-      throw new Exception('该管理员已被禁用，请换一个再试一下');
+      if($info['status'] != 0)
+      {
+        throw new Exception('该管理员已被禁用，请换一个再试一下');
+      }
     }
     $admins = new Admin();
-    $admins->name = $name;
+    $admins->username = $name;
+    $admins->nickname = $nickname;
     $admins->password = Hash::make($password);
     $admins->auth_id = $authId;
     $admins->save();
-    return $admins;
   }
 
   public function updateAdmin($id, $name, $password, $authId)
   {
-    if(Admin::where('name', $name)->count() > 1)
+    if(Admin::where('username', $name)->count() > 1)
     {
       throw new Exception('该用户名已存在，请再想想');
     }
     $updated = [];
-    $updated['name'] = $name;
+    $updated['username'] = $name;
     $updated['auth_id'] = $authId;
     $updated['created_at'] = date('Y-m-d H:i:s', time());
     if(!empty($password))

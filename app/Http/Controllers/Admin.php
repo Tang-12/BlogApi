@@ -27,28 +27,18 @@ class Admin extends Controller
     $request->validate('add');
     try {
       $name = $request->input('username');
+      $nickname = $request->input('nickname');
       $password = $request->input('password');
       $repass = $request->input('repass');
       $authId = $request->input('auth_id');
       $adminService = new AdminService();
-      $adminService->addAdmin($name, $password, $repass, $authId);
+      $adminService->addAdmin($name, $password, $repass, $authId, $nickname);
       return $this->_success('成功');
     } catch (\Exception $e) {
       return $this->_error($e->getMessage());
     }
   }
 
-  public function adminInfo(AdminRequest $request)
-  {
-    $request->validate('info');
-    try {
-      $id = $request->input('id');
-      $result = ModelsAdmin::where('id', $id)->select('id', 'name', 'auth_id')->first();
-      return $this->_success('成功', $result);
-    } catch (\Exception $e) {
-      return $this->_error($e->getMessage());
-    }
-  }
 
   public function updateAdmin(AdminRequest $request)
   {

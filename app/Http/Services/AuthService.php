@@ -22,34 +22,25 @@ class AuthService extends BaseService
   public function addAuth($name, $desc, $auth_ids)
   {
     $info = Auth::where('name', $name)->first();
-    if ($info) {
+    if (isset($info)) {
       throw new ModelNotFoundException('该权限已添加，请勿重复添加');
     }
-    $ids = implode(',', $auth_ids);
     $auth = new Auth();
     $auth->name = $name;
     $auth->desc = $desc;
-    $auth->auth_ids = $ids;
+    $auth->auth_ids = $auth_ids;
     $auth->save();
-  }
-
-  public function authInfo($id)
-  {
-    $list = Auth::where($id)->first();
-    $list['auth_ids'] = explode(',', $list['auth_ids']);
-    return $list;
   }
 
   /**
    * 更新权限
    */
   public function updateAuth($id, $name, $desc, $auth_id)
-  {
-    $ids = implode(',', $auth_id);
+  { 
     $auth = Auth::find($id);
     $auth->name = $name;
     $auth->desc = $desc;
-    $auth->auth_ids = $ids;
+    $auth->auth_ids = $auth_id;
     $auth->updated_at = date('Y-m-d H:i:s', time());
     $auth->save();
   }

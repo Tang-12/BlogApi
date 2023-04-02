@@ -23,8 +23,7 @@ use App\Http\Controllers\Menu;
     return $request->user();
 }); */
 
-Route::prefix('/v1')->group(function(){
-    Route::post('register', [Login::class, 'register']);
+Route::prefix('/v1')->group(function(){ 
     Route::post('login', [Login::class, 'login']);
 });
 
@@ -32,6 +31,9 @@ Route::prefix('/v1')->middleware(['refresh.token'])->group(function(){
     Route::post('index/info', [Index::class, 'info']);
     Route::post('index/list', [Index::class, 'menuList']);
     // 文章Api路由
+    Route::get('articles/list/{limit?}', function($limit = 10){
+        return $limit;
+    });
     Route::get('articles/list', [Article::class, 'articleList']);
     Route::post('articles/add', [Article::class, 'articleCreate']);
     Route::post('articles/update', [Article::class, 'editArticle']);
@@ -62,9 +64,14 @@ Route::prefix('/v1')->middleware(['refresh.token'])->group(function(){
     Route::get('user/deleted', [\App\Http\Controllers\User::class, 'deletedUser']);
     // 管理员
     Route::get('admin/list', [\App\Http\Controllers\Admin::class, 'listUsers']);
-    Route::post('admin/add', [\App\Http\Controllers\Admin::class, 'addAdmin']);
-    Route::get('admin/info', [\App\Http\Controllers\Admin::class, 'adminInfo']);
+    Route::post('admin/add', [\App\Http\Controllers\Admin::class, 'addAdmin']); 
     Route::post('admin/edit', [\App\Http\Controllers\Admin::class, 'updateAdmin']);
     Route::get('admin/status', [\App\Http\Controllers\Admin::class, 'statusAdmin']);
     Route::get('admin/deleted', [\App\Http\Controllers\Admin::class, 'deletedAdmin']);
+    // 权限
+    Route::get('auth/list', [\App\Http\Controllers\Auth::class, 'authList']);
+    Route::post('auth/add',[\App\Http\Controllers\Auth::class, 'createAuth']);
+    Route::post('auth/edit',[\App\Http\Controllers\Auth::class, 'editAuth']);
+    Route::get('auth/status',[\App\Http\Controllers\Auth::class, 'authStatus']);
+    Route::get('auth/deleted',[\App\Http\Controllers\Auth::class, 'deletedAuth']);
 });

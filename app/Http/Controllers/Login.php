@@ -10,28 +10,6 @@ class Login extends Controller
 {
 
     /**
-     * @url /index.php/api/v1/register
-     * @param string username 用户名
-     * @param string password 密码
-     * @param string repass 确认密码
-     * return code 200 成功 >= 400失败
-     */
-    public function register(AdminRequest $request)
-    {
-        try{
-            $name = $request->input('username');
-            $password = $request->input('password');
-            $repass = $request->input('repass');
-            $request->validate('register');
-            $loginService = new LoginService();
-            $loginService->register($name, $password, $repass);
-            return $this->_success('成功');
-        }catch(\Exception $e){
-            return $this->_error($e->getMessage());
-        }
-    }
-
-    /**
      * @url /index.php/api/v1/lgoin
      * @param string username 用户名
      * @param string password 密码 

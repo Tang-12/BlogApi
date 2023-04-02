@@ -21,7 +21,7 @@ class BaseRequest extends FormRequest
   }
 
   /**
-   * 设置场景
+   * 设置验证场景
    * @param $scene
    * @return $this
    */
@@ -102,6 +102,7 @@ class BaseRequest extends FormRequest
   protected function handleValidate()
   {
     $instance = $this->getValidatorInstance();
+ 
     if ($instance->fails()) {
         $this->failedValidation($instance);
     }

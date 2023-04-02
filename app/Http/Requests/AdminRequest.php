@@ -13,7 +13,7 @@ class AdminRequest extends BaseRequest
       'id' => 'required|numeric',
       'username' => 'required|max: 8',
       'password' => 'required|min: 6|max: 12',
-      'limit' => 'required|numeric',
+      'limit' => 'numeric',
       'auth_id' => 'required|numeric',
     ];
   }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Services\IndexService;
 use Illuminate\Support\Facades\DB;
-use SebastianBergmann\CodeCoverage\Driver\Selector;
 
 class Index extends Controller
 {
@@ -32,8 +31,11 @@ class Index extends Controller
     public function menuList()
     {
         try {
+            $u_id = $this->getAuthenticatedInfo();
+            $user = Db::table('authList')->select('menu_id')->where('auth_id', $u_id['a_id'])->get()->toArray();
+            $auth_id = implode(',', $user);
             $indexService = new IndexService();
-            $result = $indexService->indexList();
+            $result = $indexService->indexList($auth_id);
             return $this->_success('成功',$result);
         } catch (\Exception $e) {
             return $this->_error($e->getMessage());
